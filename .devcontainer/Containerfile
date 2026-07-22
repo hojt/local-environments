@@ -1,0 +1,29 @@
+FROM registry.fedoraproject.org/fedora:43
+
+RUN dnf install -y \
+      bash \
+      ca-certificates \
+      curl \
+      git \
+      podman \
+      tar \
+      gzip \
+    && dnf clean all
+
+ARG TASK_VERSION=3.45.4
+ARG KUBECTL_VERSION=1.35.0
+ARG KIND_VERSION=0.32.0
+
+RUN curl -fsSL \
+      "https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.tar.gz" \
+      | tar -xz -C /usr/local/bin task \
+    && curl -fsSL \
+      "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+      -o /usr/local/bin/kubectl \
+    && chmod +x /usr/local/bin/kubectl \
+    && curl -fsSL \
+      "https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64" \
+      -o /usr/local/bin/kind \
+    && chmod +x /usr/local/bin/kind
+
+WORKDIR /workspace

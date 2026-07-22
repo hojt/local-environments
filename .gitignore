@@ -1,0 +1,12 @@
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Operating systems
+.DS_Store
+
+# Local environment
+.env
+.env.local

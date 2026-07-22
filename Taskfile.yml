@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  validate:
+    desc: Validate the Kubernetes manifests
+    cmds:
+      - ./scripts/validate.sh
+
+  image:load:
+    desc: Load the example-backend image into the local kind cluster
+    cmds:
+      - ./scripts/load-image.sh
+
+  apply:
+    desc: Apply the local environment manifests
+    cmds:
+      - ./scripts/apply.sh
+
+  status:
+    desc: Show the status of the local environment
+    cmds:
+      - ./scripts/status.sh
+
+  delete:
+    desc: Delete the local environment resources
+    cmds:
+      - ./scripts/delete.sh
