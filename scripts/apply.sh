@@ -10,5 +10,7 @@ cd "${repo_root}"
 
 kubectl \
   --context "${KUBE_CONTEXT}" \
+  --namespace "${NAMESPACE}" \
   apply \
+  --recursive \
   --filename "${MANIFEST_DIR}"

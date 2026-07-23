@@ -6,11 +6,6 @@ tasks:
     cmds:
       - ./scripts/validate.sh
 
-  image:load:
-    desc: Load the example-backend image into the local kind cluster
-    cmds:
-      - ./scripts/load-image.sh
-
   apply:
     desc: Apply the local environment manifests
     cmds:

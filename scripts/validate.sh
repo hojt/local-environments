@@ -10,6 +10,8 @@ cd "${repo_root}"
 
 kubectl \
   --context "${KUBE_CONTEXT}" \
+  --namespace "${NAMESPACE}" \
   apply \
   --dry-run=client \
+  --recursive \
   --filename "${MANIFEST_DIR}"

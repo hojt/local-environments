@@ -10,6 +10,8 @@ cd "${repo_root}"
 
 kubectl \
   --context "${KUBE_CONTEXT}" \
+  --namespace "${NAMESPACE}" \
   delete \
-  --filename "${MANIFEST_DIR}" \
-  --ignore-not-found
+  --ignore-not-found \
+  --recursive \
+  --filename "${MANIFEST_DIR}"

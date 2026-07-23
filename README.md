@@ -15,7 +15,6 @@ Current responsibilities:
 - Kubernetes Deployments
 - Kubernetes Services
 - Local deployment automation
-- Loading locally built container images into the kind cluster
 
 Planned responsibilities:
 
@@ -61,18 +60,11 @@ task --list
 Current tasks:
 
 - `task validate`
-- `task image:load`
 - `task apply`
 - `task status`
 - `task delete`
 
 ## Typical workflow
-
-Load the application image into the cluster:
-
-```bash
-task image:load
-```
 
 Validate the manifests:
 
@@ -80,7 +72,7 @@ Validate the manifests:
 task validate
 ```
 
-Deploy the application:
+Deploy the manifests:
 
 ```bash
 task apply
@@ -156,5 +148,4 @@ Current MVP:
 - ✅ Task interface
 - ✅ Kubernetes Deployment
 - ✅ Kubernetes Service
-- ✅ Local image loading
 - ✅ End-to-end deployment verification
