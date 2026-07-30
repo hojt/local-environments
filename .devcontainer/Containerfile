@@ -1,13 +1,42 @@
 FROM registry.fedoraproject.org/fedora:43
 
+ARG USERNAME=developer
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
+
+RUN groupadd --gid "${USER_GID}" "${USERNAME}" \
+    && useradd \
+        --uid "${USER_UID}" \
+        --gid "${USER_GID}" \
+        --create-home \
+        --shell /bin/bash \
+        "${USERNAME}"
+
+RUN mkdir -p \
+      "/home/${USERNAME}/.config/nvim" \
+      "/home/${USERNAME}/.kube" \
+      "/home/${USERNAME}/.local/share/nvim" \
+      "/home/${USERNAME}/.local/state/nvim" \
+      "/home/${USERNAME}/.cache/nvim" \
+    && chown -R "${USERNAME}:${USERNAME}" \
+      "/home/${USERNAME}/.config" \
+      "/home/${USERNAME}/.kube" \
+      "/home/${USERNAME}/.local" \
+      "/home/${USERNAME}/.cache"
+
 RUN dnf install -y \
       bash \
       ca-certificates \
       curl \
+      fd-find \
+      fzf \
       git \
-      podman \
-      tar \
       gzip \
+      neovim \
+      podman \
+      ripgrep \
+      tar \
+      unzip \
     && dnf clean all
 
 ARG TASK_VERSION=3.45.4
@@ -27,3 +56,5 @@ RUN curl -fsSL \
     && chmod +x /usr/local/bin/kind
 
 WORKDIR /workspace
+
+USER ${USERNAME}
