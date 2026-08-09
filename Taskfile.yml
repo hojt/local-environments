@@ -20,3 +20,23 @@ tasks:
     desc: Delete the local environment resources
     cmds:
       - ./scripts/delete.sh
+
+  argocd:bootstrap:
+    desc: Bootstrap Argo CD applications
+    cmds:
+      - ./scripts/argocd-bootstrap.sh
+
+  argocd:apps:
+    desc: List Argo CD applications
+    cmds:
+      - kubectl -n argocd get applications --output wide
+
+  argocd:refresh:
+    desc: Refresh all Argo CD applications
+    cmds:
+      - kubectl -n argocd annotate application --all argocd.argoproj.io/refresh=normal --overwrite
+
+  argocd:refresh:hard:
+    desc: Hard refresh all Argo CD applications
+    cmds:
+      - kubectl -n argocd annotate application --all argocd.argoproj.io/refresh=hard --overwrite
