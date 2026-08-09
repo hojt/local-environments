@@ -4,4 +4,4 @@ metadata:
   name: hello-gitops
   labels:
     app.kubernetes.io/managed-by: argocd
-    homelab.example.com/purpose: gitops-demo
+    homelab.example.com/purpose: gitops-demo2
