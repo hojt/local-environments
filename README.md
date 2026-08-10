@@ -23,6 +23,7 @@ Current responsibilities:
 * Kustomize composition
 * Argo CD application definitions
 * GitOps desired state
+* Gateway API workload routing
 * Local deployment validation and troubleshooting
 
 Future responsibilities may include:
@@ -32,6 +33,7 @@ Future responsibilities may include:
 * More application workloads
 * Alternative GitOps implementations
 * Configuration and secret management
+* Additional workload routing policies
 
 ## Repository Relationships
 
@@ -55,14 +57,21 @@ local-environments
         │ reconciles
         ▼
  Kubernetes cluster
+        │
+        ▼
+   Gateway API
+        │
+        ▼
+    Workloads
 ```
 
 `example-backend` produces the application artifact.
 
-`local-platform` provides the Kubernetes cluster, local container registry, and
-Argo CD.
+`local-platform` provides the Kubernetes cluster, local container registry,
+Argo CD, Envoy Gateway, `GatewayClass`, and shared `Gateway`.
 
-`local-environments` declares what should run in the environment.
+`local-environments` declares what should run in the environment and how
+workloads are exposed through standard Gateway API resources.
 
 ## Prerequisites
 
@@ -74,7 +83,7 @@ The developer host is intentionally kept lightweight and is expected to provide:
 * Podman
 * Dev Container CLI
 * tmux
-* Terminal and editor of choice
+* terminal and editor of choice
 
 Repository-specific tooling runs inside the Dev Container.
 
@@ -127,6 +136,9 @@ Argo CD detects the new revision
       │
       ▼
 Kubernetes is reconciled
+      │
+      ▼
+Gateway API routes traffic
 ```
 
 Inspect the registered Argo CD applications:
@@ -148,13 +160,14 @@ Verify the deployed environment:
 task status
 ```
 
-For the example backend, port-forward its service:
+To access workloads through the shared Gateway, start the local Envoy
+port-forward from `local-platform`:
 
 ```bash
-kubectl port-forward service/example-backend 8080:8080
+task envoy:forward
 ```
 
-Then verify the application:
+Then verify the example backend through Gateway API routing:
 
 ```bash
 curl http://localhost:8080/api/greeting
@@ -225,6 +238,43 @@ Argo CD itself is owned and operated by `local-platform`. These tasks are
 provided here as convenient developer operations while working with the desired
 environment state.
 
+## Gateway API
+
+Workload routing is expressed using Kubernetes Gateway API.
+
+The shared Gateway infrastructure is owned by `local-platform`:
+
+```text
+local-platform
+    │
+    ├── Envoy Gateway controller
+    ├── GatewayClass
+    └── Gateway
+            │
+            ▼
+local-environments
+    │
+    └── HTTPRoute
+            │
+            ▼
+         Service
+            │
+            ▼
+         Workload
+```
+
+This repository owns workload-specific routing resources such as `HTTPRoute`.
+
+For `example-backend`, the route forwards requests under `/api` through the
+shared Gateway to the application's Kubernetes Service.
+
+The routing configuration is reconciled through Argo CD together with the
+application manifests.
+
+Keeping workload routing based on the standard Gateway API avoids coupling the
+desired state directly to Envoy Gateway and makes it possible to evaluate
+alternative Gateway API implementations later.
+
 ## Kubernetes Manifests
 
 Application manifests are organized under `apps/`.
@@ -236,11 +286,15 @@ apps/
 └── example-backend/
     ├── deployment.yaml
     ├── service.yaml
+    ├── httproute.yaml
     └── kustomization.yaml
 ```
 
 Kustomize is used to compose Kubernetes resources before they are reconciled by
 Argo CD.
+
+The `HTTPRoute` is part of the workload's desired state and is managed in the
+same way as its Deployment and Service.
 
 Validate the manifests with:
 
@@ -310,6 +364,7 @@ argocd:refresh:hard
 │   └── example-backend/
 │       ├── deployment.yaml
 │       ├── service.yaml
+│       ├── httproute.yaml
 │       └── kustomization.yaml
 ├── argocd/
 │   └── applications/
@@ -326,7 +381,8 @@ argocd:refresh:hard
 └── README.md
 ```
 
-`apps/` contains workload manifests.
+`apps/` contains workload manifests, including workload-specific Gateway API
+routing.
 
 `clusters/` contains environment-specific desired state.
 
@@ -355,6 +411,12 @@ GitOps engine
         │ reconciliation
         ▼
 Kubernetes
+        │
+        ▼
+Gateway API
+        │
+        ▼
+Workloads
 ```
 
 Task provides the stable developer interface.
@@ -363,10 +425,10 @@ Reusable or non-trivial automation is implemented as shell scripts under
 `scripts/`. Simple operations may be kept directly in the Taskfile when doing
 so keeps the underlying command visible and easy to understand.
 
-Desired state is expressed declaratively through Kubernetes manifests and
-Kustomize.
+Desired state is expressed declaratively through Kubernetes manifests,
+Kustomize, and standard Gateway API resources.
 
 The repository is intentionally kept focused on environment state. Application
-source code belongs in application repositories, while cluster infrastructure
-and platform services belong in `local-platform`.
+source code belongs in application repositories, while cluster infrastructure,
+Gateway infrastructure, and platform services belong in `local-platform`.
 
