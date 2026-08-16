@@ -6,6 +6,8 @@ metadata:
 spec:
   parentRefs:
     - name: local-gateway
+  hostnames:
+    - example.local
   rules:
     - matches:
         - path:
