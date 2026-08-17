@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: example-backend
 data:
-  GREETING_MESSAGE: "Hello from local Kubernetes"
+  GREETING_MESSAGE: "Hello after config change"
