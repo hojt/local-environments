@@ -21,6 +21,6 @@ for app_dir in "${MANIFEST_DIR}"/*; do
       --context "${KUBE_CONTEXT}" \
       --namespace "${NAMESPACE}" \
       apply \
-      --dry-run=client \
+      --dry-run=server \
       --filename -
 done
