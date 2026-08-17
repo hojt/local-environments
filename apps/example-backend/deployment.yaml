@@ -17,7 +17,7 @@ spec:
           image: localhost:5001/example-backend:0.4.1
           envFrom:
             - configMapRef:
-              name: example-backend
+                name: example-backend
           ports:
             - name: http
               containerPort: 8080
