@@ -9,4 +9,4 @@ resources:
 configMapGenerator:
   - name: example-backend
     literals:
-      - GREETING_MESSAGE=Hello from local Kubernetes
+      - GREETING_MESSAGE=Hello after config change
