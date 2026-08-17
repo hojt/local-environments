@@ -16,4 +16,17 @@ spec:
         - name: example-backend
           image: localhost:5001/example-backend:0.2.0
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
