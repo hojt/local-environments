@@ -26,7 +26,7 @@ spec:
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /q/health/ready
+              path: /q/health/does-not-exist
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
