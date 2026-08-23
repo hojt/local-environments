@@ -5,6 +5,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - httproute.yaml
+  - sealedsecret.yaml
 
 configMapGenerator:
   - name: example-backend
