@@ -10,3 +10,4 @@
 # Local environment
 .env
 .env.local
+.local/
