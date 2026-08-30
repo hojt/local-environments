@@ -11,3 +11,4 @@ configMapGenerator:
   - name: example-backend
     literals:
       - GREETING_MESSAGE=Hello after config change
+      - QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability.svc:4317
