@@ -1,6 +1,10 @@
 version: "3"
 
 tasks:
+  default:
+    cmds:
+      - task --list
+
   validate:
     desc: Validate the Kubernetes manifests
     cmds:
