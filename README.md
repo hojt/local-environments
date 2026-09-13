@@ -31,7 +31,6 @@ Future responsibilities may include:
 * Additional local environments
 * Environment-specific configuration
 * More application workloads
-* Alternative GitOps implementations
 * Configuration and secret management
 * Additional workload routing policies
 
@@ -108,14 +107,15 @@ repository:
 task up
 ```
 
-Then bootstrap the Argo CD applications defined by this repository:
+After `local-platform` has installed Argo CD, register the desired-state
+applications defined by this repository:
 
 ```bash
 task argocd:bootstrap
 ```
 
-The bootstrap establishes the connection between Argo CD and the desired state
-stored in Git.
+This explicit registration establishes the connection between the
+platform-owned Argo CD instance and the desired state stored in Git.
 
 After bootstrap, the normal workflow is GitOps-based:
 
@@ -191,7 +191,8 @@ CD to the desired environment state.
 
 ### Bootstrap
 
-The initial Argo CD applications are registered explicitly:
+After `local-platform` has installed Argo CD, the initial desired-state
+applications are registered explicitly:
 
 ```bash
 task argocd:bootstrap
@@ -376,7 +377,7 @@ argocd:refresh:hard
 │           ├── kustomization.yaml
 │           └── namespace.yaml
 ├── scripts/
-├── Taskfile.yaml
+├── Taskfile.yml
 ├── dev.sh
 └── README.md
 ```
@@ -431,4 +432,3 @@ Kustomize, and standard Gateway API resources.
 The repository is intentionally kept focused on environment state. Application
 source code belongs in application repositories, while cluster infrastructure,
 Gateway infrastructure, and platform services belong in `local-platform`.
-
