@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: example-backend
-          image: localhost:5001/example-backend:0.7.1
+          image: localhost:5001/example-backend:0.7.2
           envFrom:
             - configMapRef:
                 name: example-backend
