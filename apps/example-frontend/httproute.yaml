@@ -12,6 +12,20 @@ spec:
     - matches:
         - path:
             type: PathPrefix
+            value: /otel
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: otel-collector
+          namespace: observability
+          port: 4318
+    - matches:
+        - path:
+            type: PathPrefix
             value: /
       backendRefs:
         - name: example-frontend
